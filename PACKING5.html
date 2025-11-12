@@ -1,0 +1,1840 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PACKING_final</title>
+<style>
+:root{--bg1:#041023;--bg2:#061825;--accent:#10b981;--danger:#ef4444;--warn:#facc15;--muted:#94a3b8;--duplicate:#8b5cf6;}
+*{box-sizing:border-box;font-family:'Segoe UI',Roboto,Arial;margin:0;padding:0}
+body{min-height:100vh;background:linear-gradient(180deg,var(--bg1),var(--bg2));display:flex;align-items:flex-start;justify-content:center;padding:18px;color:#e6eef6}
+
+/* Login Modal */
+.login-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(4, 16, 35, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.login-container {
+  background: rgba(255,255,255,0.05);
+  border-radius: 16px;
+  padding: 30px;
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 20px 40px rgba(2,6,23,0.8);
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #86efac, #34d399);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.login-input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.08);
+  color: #e6eef6;
+  font-size: 15px;
+  outline: none;
+  margin-bottom: 16px;
+}
+
+.login-input:focus {
+  border-color: var(--accent);
+}
+
+.login-button {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(90deg, #064e3b, #065f46);
+  color: #e6eef6;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.login-error {
+  color: var(--danger);
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  min-height: 20px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #e6eef6;
+  font-size: 14px;
+}
+
+.logout-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(239,68,68,0.3);
+  background: rgba(239,68,68,0.1);
+  color: var(--danger);
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Rest of your original CSS */
+.app{width:100%;max-width:1600px;background:rgba(255,255,255,0.02);border-radius:14px;padding:18px;box-shadow:0 8px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+h1{font-size:28px;background:linear-gradient(90deg,#86efac,#34d399);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tab{padding:8px 12px;border-radius:10px;cursor:pointer;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03)}
+.tab.active{background:linear-gradient(90deg,#064e3b,#065f46);color:#e6eef6;border:1px solid rgba(255,255,255,0.06)}
+
+.main-container {
+  display: flex;
+  gap: 30px;
+}
+
+.left-panel {
+  flex: 1;
+  max-width: 600px;
+}
+
+.right-panel {
+  flex: 1;
+  min-width: 800px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.inputs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.inputs input,.inputs select{padding:12px 14px;border-radius:10px;border:0;background:rgba(255,255,255,0.03);color:inherit;font-size:15px;min-width:140px;}
+input[type="text"]{text-transform:uppercase}
+
+#shift {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #e6eef6;
+  font-weight: 500;
+}
+#shift:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(16,185,129,0.2);
+}
+#shift option {
+  background: var(--bg1);
+  color: #e6eef6;
+}
+
+.scan-input{padding:18px;border-radius:12px;border:2px dashed rgba(255,255,255,0.04);font-size:20px;background:transparent;color:inherit;outline:none;width:100%}
+.result-panel{width:100%;min-height:200px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;text-align:center;margin-top:12px;transition:all .3s ease}
+.result-ok{background:rgba(16,185,129,0.1);border:2px solid rgba(16,185,129,0.2);color:var(--accent)}
+.result-fail{background:rgba(239,68,68,0.1);border:2px solid rgba(239,68,68,0.2);color:var(--danger)}
+.result-warn {
+  background: rgba(250,204,21,0.1);
+  border: 2px solid rgba(250,204,21,0.2);
+  color: var(--warn);
+}
+
+.result-wait {
+  background: rgba(239,68,68,0.1);
+  border: 2px solid rgba(239,68,68,0.3);
+  color: var(--danger);
+}
+
+.result-not-found{background:rgba(148,163,184,0.1);border:2px solid rgba(148,163,184,0.2);color:var(--muted)}
+.result-duplicate{background:rgba(139,92,246,0.1);border:2px solid rgba(139,92,246,0.2);color:var(--duplicate)}
+.big-text{font-weight:900;font-size:36px;letter-spacing:1px}
+.small-meta{font-size:12px;color:var(--muted);margin-top:10px}
+
+.table-container {
+  position: relative;
+  overflow: auto;
+  max-height: 70vh;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.03);
+  margin-top: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  color: inherit;
+}
+
+th, td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  text-align: left;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.filter-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+#scanLog{max-height:200px;overflow-y:auto;margin-top:12px;padding:10px;border:1px solid rgba(255,255,255,0.08);border-radius:10px;background:rgba(255,255,255,0.02);font-size:14px}
+#summary{margin-bottom:8px;color:#a7f3d0}
+
+.loading {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: var(--accent);
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 8px;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.inputs input:invalid, .inputs select:invalid {
+  border: 1px solid rgba(239,68,68,0.4);
+}
+.inputs input:valid, .inputs select:valid {
+  border: 1px solid rgba(16,185,129,0.4);
+}
+
+.email-status {
+  font-size: 12px;
+  margin-top: 5px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.05);
+  display: inline-block;
+}
+
+.status-ok {
+  color: var(--accent);
+  font-weight: bold;
+}
+.status-fail {
+  color: var(--danger);
+  font-weight: bold;
+}
+.status-wait {
+  color: var(--danger);
+  font-weight: bold;
+}
+.status-not-qc {
+  color: var(--danger);
+  font-weight: bold;
+}
+
+.duplicate-badge {
+  background: var(--duplicate);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  margin-left: 5px;
+}
+
+#sheetHead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(4, 16, 35, 0.98) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid rgba(255,255,255,0.15);
+}
+
+#sheetHead th {
+  background: rgba(4, 16, 35, 0.98) !important;
+  color: #e2e8f0 !important;
+  font-weight: 600;
+  padding: 12px;
+  position: sticky;
+  top: 0;
+  border-bottom: 2px solid rgba(255,255,255,0.15);
+  min-width: 80px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  word-spacing: 1px;
+}
+
+#sheetBody tr:first-child td {
+  padding-top: 14px;
+}
+
+#sheetBody td {
+  color: #cbd5e1 !important;
+  font-size: 13px;
+  background: transparent;
+  white-space: nowrap;
+  min-width: 80px;
+}
+
+#sheetBody tr:hover td {
+  background: rgba(255,255,255,0.05) !important;
+}
+
+#searchQr {
+  padding: 10px 12px !important;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  background: rgba(255,255,255,0.08) !important;
+  color: #e6eef6 !important;
+  min-width: 220px;
+  font-size: 14px;
+}
+
+#searchQr::placeholder {
+  color: #94a3b8 !important;
+}
+
+#searchQr:focus {
+  outline: none;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 2px rgba(16,185,129,0.2);
+}
+
+.right-panel {
+  padding-top: 12px;
+}
+
+#item {
+    background: rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    color: #e6eef6 !important;
+}
+
+#item option {
+    background: #041023 !important;
+    color: #e6eef6 !important;
+}
+
+#item option[disabled] {
+    color: #94a3b8 !important;
+}
+
+/* NEW STYLES FOR BOX MANAGEMENT */
+.box-management {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.box-inputs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.box-inputs input {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 0;
+  background: rgba(255,255,255,0.03);
+  color: inherit;
+  font-size: 15px;
+  min-width: 140px;
+}
+
+.box-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.box-button {
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(90deg, #064e3b, #065f46);
+  color: #e6eef6;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  flex: 1;
+}
+
+.box-button:hover {
+  opacity: 0.9;
+}
+
+.box-button:disabled {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.4);
+  cursor: not-allowed;
+}
+
+.reset-button {
+  background: linear-gradient(90deg, #7c2d12, #9a3412) !important;
+}
+
+.box-info {
+  margin-top: 15px;
+  padding: 12px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.box-info div {
+  margin-bottom: 5px;
+}
+
+.box-info span {
+  font-weight: bold;
+  color: var(--accent);
+}
+
+.box-count {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.box-count span {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.qr-list {
+  margin-top: 10px;
+  max-height: 120px;
+  overflow-y: auto;
+  background: rgba(255,255,255,0.03);
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 12px;
+}
+
+.qr-list div {
+  padding: 2px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.qr-list div:last-child {
+  border-bottom: none;
+}
+
+.qr-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.qr-stats span {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+/* NEW: Required field styling */
+.input-required:invalid {
+  border: 1px solid rgba(239,68,68,0.6) !important;
+  background: rgba(239,68,68,0.1) !important;
+}
+.input-required:valid {
+  border: 1px solid rgba(16,185,129,0.6) !important;
+}
+</style>
+</head>
+<body>
+<!-- Login Modal -->
+<div id="loginModal" class="login-modal">
+  <div class="login-container">
+    <div class="login-title">ĐĂNG NHẬP HỆ THỐNG</div>
+    <input type="text" id="username" class="login-input" placeholder="Tên đăng nhập">
+    <input type="password" id="password" class="login-input" placeholder="Mật khẩu">
+    <button id="loginBtn" class="login-button">ĐĂNG NHẬP</button>
+    <div id="loginError" class="login-error"></div>
+  </div>
+</div>
+
+<div class="app hidden" id="mainApp">
+  <header>
+  <h1 style="display: flex; align-items: center; gap: 10px;">
+  <img src="logo.png" alt="Logo" style="height: 100px; width: auto; margin-right: 20px;">
+   ĐÓNG GÓI / PACKING
+  </h1>
+    <div class="user-info">
+      <span id="currentUser">Chào bạn!</span>
+      <button id="logoutBtn" class="logout-btn">Đăng xuất</button>
+    </div>
+    <div class="tabs">
+      
+    </div>
+  </header>
+
+  <div id="tab1">
+    <div class="main-container">
+      <div class="left-panel">
+        <div class="inputs">
+          <select id="shift" class="input-required" required>
+            <option value="" disabled selected>Chọn ca</option>
+            <option>Ca 1: 6:00 - 14:00</option>
+            <option>Ca 2: 14:00 - 22:00</option>
+            <option>Ca 3: 22:00 - 6:00AM</option>
+            <option>Ca 1 dài: 6:00 - 18:00</option>
+            <option>Ca 2 dài: 18:00 - 6:00AM</option>
+            <option>Ca HC: 8:00 - 16:30</option>
+          </select>
+          <input id="emp" type="text" class="input-required" placeholder="Mã NV (4 số)" pattern="[0-9]{4}" required/>
+          <input id="po" type="text" class="input-required" placeholder="PO" required/>
+          <input id="wo" type="text" class="input-required" placeholder="WO" required/>
+          <select id="item" class="input-required" required>
+            <option value="" disabled selected>Mã hàng</option>
+            <option value="ECM-2583-236">ECM-2583-236</option>
+            <option value="ECM-2583-164">ECM-2583-164</option>
+            <option value="ECM-2300">ECM-2300</option>
+            <option value="ECM-2310">ECM-2310</option>
+            <option value="IZ-1-R3">IZ-1-R3</option>
+            <option value="RM-4K-R3">RM-4K-R3</option>
+            <option value="AM-4-R3">AM-4-R3</option>
+            <option value="P-7937">P-7937</option>
+            <option value="P-8105">P-8105</option>
+            <option value="P-8149">P-8149</option>
+            <option value="BMS 85AH">BMS 85AH</option>
+            <option value="BMS 57AH">BMS 57AH</option>
+            <option value="CONTROLLER">CONTROLLER</option>
+            <option value="CAS NEMO">CAS NEMO</option>
+            <option value="CAS MINI-DI">CAS MINI-DI</option>
+            <option value="CAS MINI-485">CAS MINI-485</option>
+            <option value="BN 2573A">BN 2573A</option>
+            <option value="OEM">OEM</option>
+          </select>
+        </div>
+
+        <!-- NEW: Box Management Section -->
+        <div class="box-management">
+          <div class="box-inputs">
+            <input id="partname" type="text" class="input-required" placeholder="Part Number" required/>
+            <input id="qtyPerBox" type="number" class="input-required" placeholder="Số lượng/thùng" min="1" required/>
+            <input id="boxNumber" type="number" class="input-required" placeholder="Số thùng" min="1" required/>
+          </div>
+          <div class="box-actions">
+            <button id="finishBoxBtn" class="box-button" disabled>Kết thúc thùng (Xuất PDF)</button>
+            <button id="resetBoxBtn" class="box-button reset-button">Reset Thùng Hiện Tại</button>
+          </div>
+          <div class="box-info">
+            <div>Thông tin thùng hiện tại:</div>
+            <div>PO: <span id="currentPo">-</span></div>
+            <div>Part Number: <span id="currentPartname">-</span></div>
+            <div>WO: <span id="currentWo">-</span></div>
+            <div>Số lượng/thùng: <span id="currentQtyPerBox">-</span></div>
+            <div>Số thùng: <span id="currentBoxNumber">-</span></div>
+            <div>QR Codes trong thùng: <span id="qrCount">0</span></div>
+          </div>
+          <div class="qr-list" id="currentQrList">
+            <!-- Danh sách QR code sẽ hiển thị ở đây -->
+          </div>
+          <div class="qr-stats">
+            <div>Tổng QR: <span id="totalQrCount">0</span></div>
+            <div>QR OK: <span id="okQrCount">0</span></div>
+            <div>QR Fail: <span id="failQrCount">0</span></div>
+            <div>Chưa QC: <span id="waitQrCount">0</span></div>
+          </div>
+          <div class="box-count">
+            <div>Đã hoàn thành: <span id="completedBoxes">0</span> thùng</div>
+            <div>Tổng sản phẩm: <span id="totalProducts">0</span> sản phẩm</div>
+          </div>
+        </div>
+
+        <input id="scanInput" class="scan-input" placeholder="Vui lòng nhập đầy đủ thông tin trước khi quét QR" autofocus disabled />
+        <div class="small-meta">Số lượng quét trong ca: <span id="countByShift">0</span></div>
+        <div class="small-meta">⏱️ Dữ liệu cập nhật lần cuối: <span id="lastUpdate">Đang tải...</span></div>
+
+        <div id="resultPanel" class="result-panel result-warn">
+          <div id="resultText" class="big-text">CHƯA CÓ DỮ LIỆU</div>
+          <div id="emailStatus" class="email-status"></div>
+        </div>
+
+        <div id="scanLog">
+          <div style="color:#94a3b8;margin-bottom:6px;">📋 QR đã quét:</div>
+          <ul id="scanLogList" style="list-style:none;padding:0;margin:0;"></ul>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <div id="summary">Tổng: <span id="sumOk">OK:0</span> | <span id="sumFail">FAIL:0</span> | <span id="sumWait">Chưa QC:0</span></div>
+        <div class="filter-row">
+          <input id="searchQr" type="text" placeholder="Tìm QR..." style="min-width:220px">
+        </div>
+        <div class="small-meta" id="rowCount">Nguồn: Google Sheet (tự động cập nhật mỗi 1 phút)</div>
+        <div id="tableContainer" class="table-container">
+          <table>
+            <thead id="sheetHead"></thead>
+            <tbody id="sheetBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<!-- Thêm thư viện PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+
+<script>
+(function(){
+  // Config
+  const EMAILJS_USER_ID = "NaZrY7JQQ5IW03I8_";
+  const EMAILJS_SERVICE_ID = "service_msgjmel";
+  const EMAILJS_TEMPLATE_ID = "template_a5t9xa6";
+  const ALERT_EMAIL = "luytlv@trungnamems.com.vn";
+  
+  const LOG_GSHEET_URL = 'https://script.google.com/macros/s/AKfycbzKS0deV_jdJXPopVjKk2eKv19Smyqn7itM3ax9Km_j3u3wQ5a9ehoF_a_RK7jDEXmYfg/exec';
+  const GSHEET_URL = 'https://script.google.com/macros/s/AKfycbwOt6HhlzmBT2PbhA_0qfwF7rlcrJ4XVPVQcPlh4YeswQ90DQ6rDYmCZl8OV6kqUtV1/exec';
+  const REFRESH_INTERVAL = 60000;
+
+  // Simple user accounts
+  const USERS = {
+    '5035': '123456',
+    '5025': '502511',
+    '5034': '503411'
+  };
+
+  // DOM Elements
+  const loginModal = document.getElementById('loginModal');
+  const mainApp = document.getElementById('mainApp');
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+  const loginBtn = document.getElementById('loginBtn');
+  const loginError = document.getElementById('loginError');
+  const currentUser = document.getElementById('currentUser');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  const scanInput = document.getElementById('scanInput');
+  const resultPanel = document.getElementById('resultPanel');
+  const resultText = document.getElementById('resultText');
+  const emailStatus = document.getElementById('emailStatus');
+  const countSpan = document.getElementById('countByShift');
+  const scanLogList = document.getElementById('scanLogList');
+  const lastUpdate = document.getElementById('lastUpdate');
+  const rowCount = document.getElementById('rowCount');
+  const searchQr = document.getElementById('searchQr');
+  const sheetHead = document.getElementById('sheetHead');
+  const sheetBody = document.getElementById('sheetBody');
+  const sumOk = document.getElementById('sumOk');
+  const sumFail = document.getElementById('sumFail');
+  const sumWait = document.getElementById('sumWait');
+  const shiftSelect = document.getElementById('shift');
+  const empInput = document.getElementById('emp');
+  const poInput = document.getElementById('po');
+  const woInput = document.getElementById('wo');
+  const itemInput = document.getElementById('item');
+
+  // NEW: Box Management Elements
+  const partnameInput = document.getElementById('partname');
+  const qtyPerBoxInput = document.getElementById('qtyPerBox');
+  const boxNumberInput = document.getElementById('boxNumber');
+  const finishBoxBtn = document.getElementById('finishBoxBtn');
+  const resetBoxBtn = document.getElementById('resetBoxBtn');
+  const currentPo = document.getElementById('currentPo');
+  const currentPartname = document.getElementById('currentPartname');
+  const currentWo = document.getElementById('currentWo');
+  const currentQtyPerBox = document.getElementById('currentQtyPerBox');
+  const currentBoxNumber = document.getElementById('currentBoxNumber');
+  const completedBoxes = document.getElementById('completedBoxes');
+  const totalProducts = document.getElementById('totalProducts');
+  const qrCount = document.getElementById('qrCount');
+  const currentQrList = document.getElementById('currentQrList');
+  const totalQrCount = document.getElementById('totalQrCount');
+  const okQrCount = document.getElementById('okQrCount');
+  const failQrCount = document.getElementById('failQrCount');
+  const waitQrCount = document.getElementById('waitQrCount');
+
+  // State
+  let sheetRows = [];
+  let filteredRows = [];
+  let keys = [];
+  let lastHash = '';
+  let lastMailSent = {};
+  let scannedQRs = {};
+  let countOK = 0, countFAIL = 0, countWAIT = 0;
+  let dataLoaded = false;
+  let isLoggedIn = false;
+  
+  // NEW: Box Management State
+  let completedBoxCount = 0;
+  let totalProductCount = 0;
+  let currentBoxQRCodes = [];
+  let boxStartTime = null;
+
+  // NEW: Validation functions
+  function canAddMoreQR() {
+    const qtyPerBox = parseInt(qtyPerBoxInput.value) || 0;
+    const currentOKCount = currentBoxQRCodes.filter(qr => qr.status === 'OK').length;
+    return currentOKCount < qtyPerBox;
+  }
+
+  function getRemainingQRCount() {
+    const qtyPerBox = parseInt(qtyPerBoxInput.value) || 0;
+    const currentOKCount = currentBoxQRCodes.filter(qr => qr.status === 'OK').length;
+    return qtyPerBox - currentOKCount;
+  }
+
+  // UPDATED: Enhanced validateForm function
+  function validateForm() {
+    const shiftValid = shiftSelect.value && shiftSelect.value !== "";
+    const empValid = empInput.value && empInput.value.length === 4;
+    const poValid = poInput.value && poInput.value.length > 0;
+    const woValid = woInput.value && woInput.value.length > 0;
+    const itemValid = itemInput.value && itemInput.value !== "";
+    
+    // THÊM KIỂM TRA CÁC Ô TRONG BOX MANAGEMENT
+    const partnameValid = partnameInput.value && partnameInput.value.trim() !== '';
+    const qtyPerBoxValid = qtyPerBoxInput.value && parseInt(qtyPerBoxInput.value) > 0;
+    const boxNumberValid = boxNumberInput.value && parseInt(boxNumberInput.value) > 0;
+    
+    // TẤT CẢ 8 Ô PHẢI ĐƯỢC NHẬP ĐẦY ĐỦ
+    const allValid = shiftValid && empValid && poValid && woValid && itemValid && 
+                    partnameValid && qtyPerBoxValid && boxNumberValid && dataLoaded;
+    
+    scanInput.disabled = !allValid;
+    
+    if (!allValid) {
+        let missingFields = [];
+        if (!shiftValid) missingFields.push("Ca làm việc");
+        if (!empValid) missingFields.push("Mã NV");
+        if (!poValid) missingFields.push("PO");
+        if (!woValid) missingFields.push("WO");
+        if (!itemValid) missingFields.push("Mã hàng");
+        if (!partnameValid) missingFields.push("Part Number");
+        if (!qtyPerBoxValid) missingFields.push("Số lượng/thùng");
+        if (!boxNumberValid) missingFields.push("Số thùng");
+        if (!dataLoaded) missingFields.push("Dữ liệu chưa tải xong");
+        
+        scanInput.placeholder = `Vui lòng nhập: ${missingFields.join(", ")}`;
+    } else {
+        scanInput.placeholder = "Quét QR code...";
+        scanInput.focus();
+    }
+    
+    return allValid;
+  }
+
+  // Simple Login System
+  function initLogin() {
+    loginBtn.addEventListener('click', handleLogin);
+    logoutBtn.addEventListener('click', handleLogout);
+    passwordInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') handleLogin();
+    });
+  }
+
+  function handleLogin() {
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!username || !password) {
+      showLoginError('Vui lòng nhập đầy đủ thông tin');
+      return;
+    }
+
+    if (USERS[username] === password) {
+      isLoggedIn = true;
+      currentUser.textContent = `Xin chào, ${username}`;
+      loginModal.classList.add('hidden');
+      mainApp.classList.remove('hidden');
+
+      if (/^\d{4}$/.test(username)) {
+        empInput.value = username;
+        validateForm();
+      }
+
+      loadSheet();
+      setInterval(loadSheet, REFRESH_INTERVAL);
+    } else {
+      showLoginError('Sai tên đăng nhập hoặc mật khẩu');
+    }
+  }
+
+  function handleLogout() {
+    isLoggedIn = false;
+    loginModal.classList.remove('hidden');
+    mainApp.classList.add('hidden');
+    usernameInput.value = '';
+    passwordInput.value = '';
+    loginError.textContent = '';
+  }
+
+  function showLoginError(message) {
+    loginError.textContent = message;
+  }
+
+  // NEW: Box Management Functions
+  function initBoxManagement() {
+    [poInput, partnameInput, woInput, qtyPerBoxInput, boxNumberInput].forEach(input => {
+      input.addEventListener('input', function() {
+        updateBoxInfo();
+        validateForm(); // THÊM VALIDATE REAL-TIME
+      });
+    });
+    
+    finishBoxBtn.addEventListener('click', finishBox);
+    resetBoxBtn.addEventListener('click', resetCurrentBox);
+    
+    updateFinishButton();
+    updateBoxInfo();
+    resetCurrentBox();
+  }
+  
+  function updateBoxInfo() {
+    currentPo.textContent = poInput.value || '-';
+    currentPartname.textContent = partnameInput.value || '-';
+    currentWo.textContent = woInput.value || '-';
+    currentQtyPerBox.textContent = qtyPerBoxInput.value || '-';
+    currentBoxNumber.textContent = boxNumberInput.value || '-';
+    qrCount.textContent = currentBoxQRCodes.length;
+    
+    // Update QR statistics
+    const okCount = currentBoxQRCodes.filter(qr => qr.status === 'OK').length;
+    const failCount = currentBoxQRCodes.filter(qr => qr.status === 'QC FAIL').length;
+    const waitCount = currentBoxQRCodes.filter(qr => qr.status === 'CHƯA QC').length;
+    
+    totalQrCount.textContent = currentBoxQRCodes.length;
+    okQrCount.textContent = okCount;
+    failQrCount.textContent = failCount;
+    waitQrCount.textContent = waitCount;
+    
+    // THÊM HIỂN THỊ SỐ LƯỢNG CÒN LẠI
+    const remaining = getRemainingQRCount();
+    if (qtyPerBoxInput.value) {
+        qrCount.innerHTML = `${currentBoxQRCodes.length} <span style="color: var(--accent); font-size: 12px;">(Còn ${remaining})</span>`;
+    }
+    
+    updateFinishButton();
+    updateQRList();
+  }
+  
+  function updateFinishButton() {
+    const hasPo = poInput.value.trim() !== '';
+    const hasPartname = partnameInput.value.trim() !== '';
+    const hasWo = woInput.value.trim() !== '';
+    const hasQtyPerBox = qtyPerBoxInput.value && parseInt(qtyPerBoxInput.value) > 0;
+    const hasBoxNumber = boxNumberInput.value && parseInt(boxNumberInput.value) > 0;
+    
+    finishBoxBtn.disabled = !(hasPo && hasPartname && hasWo && hasQtyPerBox && hasBoxNumber);
+  }
+  
+  function updateQRList() {
+    currentQrList.innerHTML = '';
+    if (currentBoxQRCodes.length === 0) {
+      const emptyMsg = document.createElement('div');
+      emptyMsg.textContent = 'Chưa có QR code nào trong thùng';
+      emptyMsg.style.color = '#94a3b8';
+      emptyMsg.style.fontStyle = 'italic';
+      currentQrList.appendChild(emptyMsg);
+      return;
+    }
+    
+    currentBoxQRCodes.forEach((qr, index) => {
+      const div = document.createElement('div');
+      div.textContent = `${index + 1}. ${qr.code} (${qr.status})`;
+      
+      if (qr.status === 'OK') {
+        div.style.color = '#10b981';
+      } else if (qr.status === 'QC FAIL') {
+        div.style.color = '#ef4444';
+      } else {
+        div.style.color = '#facc15';
+      }
+      
+      currentQrList.appendChild(div);
+    });
+  }
+  
+  function finishBox() {
+    const po = poInput.value;
+    const partname = partnameInput.value;
+    const wo = woInput.value;
+    const qtyPerBox = parseInt(qtyPerBoxInput.value);
+    const boxNumber = parseInt(boxNumberInput.value);
+    const shift = shiftSelect.value;
+    const emp = empInput.value;
+    const item = itemInput.value;
+    
+    // Lọc chỉ lấy QR code có trạng thái OK
+    const okQRCodes = currentBoxQRCodes.filter(qr => qr.status === 'OK');
+    
+    // Ghi log thông tin kết thúc thùng lên Google Sheet
+    logToSheet(
+      'BOX_FINISHED', 
+      'BOX_COMPLETED', 
+      shift, 
+      emp, 
+      po, 
+      wo, 
+      item, 
+      false, 
+      partname, 
+      qtyPerBox, 
+      boxNumber,
+      `Hoàn thành thùng với ${okQRCodes.length} QR code OK`
+    );
+    
+    // Kiểm tra nếu không có QR code OK nào
+    if (okQRCodes.length === 0) {
+      if (!confirm('Không có QR code OK nào trong thùng. Bạn có chắc chắn muốn xuất file không?')) {
+        return;
+      }
+    }
+    
+    // Tạo nội dung cho PDF
+    const pdfContent = createPDFContent(po, partname, wo, qtyPerBox, boxNumber, shift, emp, item, okQRCodes);
+    
+    // Tạo và tải xuống PDF
+    generatePDF(pdfContent, po, partname);
+    
+    // Update counters
+    completedBoxCount += boxNumber;
+    totalProductCount += qtyPerBox * boxNumber;
+    
+    completedBoxes.textContent = completedBoxCount;
+    totalProducts.textContent = totalProductCount;
+    
+    // Show success message
+    alert(`✅ Đã xuất file PDF thông tin thùng!\n\n📊 Tổng số QR code: ${currentBoxQRCodes.length}\n✅ QR code OK: ${okQRCodes.length}\n📁 File đã được tải xuống`);
+    
+    // Reset box
+    resetCurrentBox();
+  }
+  
+  function generateQRCodeImage(qrText) {
+    try {
+      const typeNumber = 0;
+      const errorCorrectionLevel = 'M';
+      const qr = qrcode(typeNumber, errorCorrectionLevel);
+      qr.addData(qrText);
+      qr.make();
+      
+      const svgString = qr.createSvgTag(2, 0);
+      return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgString)));
+    } catch (error) {
+      console.error('Lỗi tạo QR code:', error);
+      return null;
+    }
+  }
+
+  function createPDFContent(po, partname, wo, qtyPerBox, boxNumber, shift, emp, item, okQRCodes) {
+    const now = new Date();
+    
+    let content = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <style>
+                body { 
+                    font-family: Arial, sans-serif; 
+                    margin: 12px;
+                    line-height: 1.3;
+                    font-size: 12px; /* Tăng font size chung */
+                }
+                .header { 
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-bottom: 15px;
+                    border-bottom: 2px solid #333; 
+                    padding-bottom: 8px;
+                }
+                .logo { 
+                    width: 80px;
+                    height: auto;
+                }
+                .company-info {
+                    text-align: center;
+                    flex: 1;
+                }
+                .section { margin-bottom: 12px; }
+                .section-title { 
+                    background: #f0f0f0; 
+                    padding: 6px;
+                    font-weight: bold; 
+                    margin-bottom: 8px;
+                    border-radius: 4px;
+                    font-size: 12px; /* Tăng font size tiêu đề */
+                }
+                
+                /* THÔNG TIN CHUNG - 2 CỘT */
+                .info-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 8px;
+                    margin-bottom: 15px;
+                }
+                .info-item {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 4px 0;
+                    border-bottom: 1px dotted #ddd;
+                }
+                .info-label {
+                    font-weight: bold;
+                    min-width: 120px;
+                }
+                .info-value {
+                    text-align: right;
+                    flex: 1;
+                }
+                
+                /* CSS MỚI CHO 3 CỘT QR CODE */
+                .qr-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr 1fr; /* 3 cột bằng nhau */
+                    gap: 6px; /* Khoảng cách giữa các cột */
+                    margin-top: 8px;
+                }
+                .qr-column {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px; /* Khoảng cách giữa các QR trong cùng cột */
+                }
+                .qr-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    padding: 4px;
+                    border: 1px solid #e0e0e0;
+                    border-radius: 3px;
+                    background: #f9f9f9;
+                    min-height: 35px; /* Chiều cao tối thiểu */
+                }
+                .qr-number {
+                    font-size: 10px; /* Tăng size số */
+                    color: #333;
+                    font-weight: bold;
+                    min-width: 20px;
+                }
+                .qr-text { 
+                    flex: 1; 
+                    font-family: monospace; 
+                    word-break: break-all; 
+                    font-size: 9px; /* Tăng size chữ QR */
+                    line-height: 1.2;
+                    font-weight: bold; /* Làm đậm chữ */
+                }
+                .qr-image { 
+                    flex-shrink: 0; 
+                    text-align: center; 
+                }
+                .qr-image img { 
+                    width: 28px; /* Tăng kích thước QR code */
+                    height: 28px;
+                }
+                
+                .footer { 
+                    margin-top: 20px; 
+                    text-align: center; 
+                    font-size: 9px; 
+                    color: #666; 
+                    border-top: 1px solid #ddd; 
+                    padding-top: 8px; 
+                }
+                .summary { 
+                    background: #f8f9fa; 
+                    padding: 8px; 
+                    border-radius: 4px; 
+                    margin: 10px 0; 
+                    font-size: 11px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <img src="logo.png" alt="Logo" class="logo">
+                <div class="company-info">
+                    <h2 style="margin: 0; font-size: 16px;">THÔNG TIN THÙNG HÀNG</h2>
+                    <h3 style="margin: 5px 0 0 0; font-size: 14px;">CÔNG TY CỔ PHẦN TRUNG NAM EMS</h3>
+                </div>
+                <div style="width: 80px;"></div>
+            </div>
+            
+            <div class="summary">
+                <strong>Thời gian tạo:</strong> ${now.toLocaleString('vi-VN')} | 
+                <strong>Tổng QR OK:</strong> ${okQRCodes.length} | 
+                <strong>Số thùng:</strong> ${boxNumber}
+            </div>
+            
+            <div class="section">
+                <div class="section-title">THÔNG TIN CHUNG</div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">PO:</span>
+                        <span class="info-value"><strong>${po}</strong></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Part Number:</span>
+                        <span class="info-value"><strong>${partname}</strong></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">WO:</span>
+                        <span class="info-value"><strong>${wo}</strong></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Số lượng/thùng:</span>
+                        <span class="info-value"><strong>${qtyPerBox}</strong></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Mã hàng:</span>
+                        <span class="info-value">${item}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">DANH SÁCH QR CODE TRONG THÙNG (${okQRCodes.length} mã)</div>
+    `;
+    
+    if (okQRCodes.length > 0) {
+        // Chia danh sách QR code thành 3 cột
+        const itemsPerColumn = Math.ceil(okQRCodes.length / 3);
+        const column1 = okQRCodes.slice(0, itemsPerColumn);
+        const column2 = okQRCodes.slice(itemsPerColumn, itemsPerColumn * 2);
+        const column3 = okQRCodes.slice(itemsPerColumn * 2);
+        
+        content += `<div class="qr-grid">`;
+        
+        // Cột 1
+        content += `<div class="qr-column">`;
+        column1.forEach((qr, index) => {
+            const qrImage = generateQRCodeImage(qr.code);
+            content += createQRItemHTML(qr, index + 1, qrImage);
+        });
+        content += `</div>`;
+        
+        // Cột 2
+        content += `<div class="qr-column">`;
+        column2.forEach((qr, index) => {
+            const actualIndex = itemsPerColumn + index;
+            const qrImage = generateQRCodeImage(qr.code);
+            content += createQRItemHTML(qr, actualIndex + 1, qrImage);
+        });
+        content += `</div>`;
+        
+        // Cột 3
+        content += `<div class="qr-column">`;
+        column3.forEach((qr, index) => {
+            const actualIndex = (itemsPerColumn * 2) + index;
+            const qrImage = generateQRCodeImage(qr.code);
+            content += createQRItemHTML(qr, actualIndex + 1, qrImage);
+        });
+        content += `</div>`;
+        
+        content += `</div>`;
+    } else {
+        content += `
+            <div style="text-align: center; color: #666; font-style: italic; padding: 15px; background: #f9f9f9; border-radius: 4px;">
+                <strong>Không có QR code OK nào trong thùng</strong>
+            </div>
+        `;
+    }
+    
+    content += `
+            </div>
+        </body>
+        </html>
+    `;
+    
+    return content;
+}
+
+// Hàm tạo HTML cho mỗi item QR code (đã cập nhật)
+function createQRItemHTML(qr, number, qrImage) {
+    let html = `
+        <div class="qr-item">
+            <span class="qr-number">${number}.</span>
+            <div class="qr-text">${qr.code}</div>
+            <div class="qr-image">
+    `;
+    
+    if (qrImage) {
+        html += `<img src="${qrImage}" />`;
+    } else {
+        html += `
+            <div style="width: 28px; height: 28px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; background: #f9f9f9;">
+                <div style="text-align: center; color: #666; font-size: 8px;">
+                    📱
+                </div>
+            </div>
+        `;
+    }
+    
+    html += `</div></div>`;
+    return html;
+}
+  function generatePDF(content, po, partname) {
+    if (typeof jsPDF !== 'undefined') {
+        const { jsPDF } = window.jspdf;
+        
+        const tempElement = document.createElement('div');
+        tempElement.innerHTML = content;
+        tempElement.style.width = '210mm';
+        tempElement.style.padding = '20px';
+        document.body.appendChild(tempElement);
+        
+        html2canvas(tempElement, {
+            scale: 2,
+            useCORS: true,
+            logging: false
+        }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const imgWidth = 210;
+            const pageHeight = 295;
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            let heightLeft = imgHeight;
+            let position = 0;
+            
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+            
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight + pageHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+            
+            const fileName = `THUNG_HANG_${po}_${partname}_${new Date().toISOString().slice(0, 10).replace(/-/g, '')}.pdf`;
+            pdf.save(fileName);
+            
+            document.body.removeChild(tempElement);
+        }).catch(error => {
+            console.error('Lỗi tạo PDF:', error);
+            printPDF(content);
+        });
+    } else {
+        printPDF(content);
+    }
+  }
+
+  function printPDF(content) {
+    const printWindow = window.open('', '_blank');
+    printWindow.document.open();
+    printWindow.document.write(content);
+    printWindow.document.close();
+    
+    printWindow.onload = function() {
+        printWindow.print();
+    };
+  }
+  
+  function resetCurrentBox() {
+    if (currentBoxQRCodes.length > 0) {
+      if (!confirm('Bạn có chắc chắn muốn reset thùng hiện tại? Tất cả QR code sẽ bị xóa.')) {
+        return;
+      }
+    }
+    
+    currentBoxQRCodes = [];
+    boxStartTime = new Date();
+    updateBoxInfo();
+    
+    const originalText = resetBoxBtn.textContent;
+    resetBoxBtn.textContent = '✅ Đã reset';
+    resetBoxBtn.style.background = 'linear-gradient(90deg, #065f46, #047857)';
+    
+    setTimeout(() => {
+      resetBoxBtn.textContent = originalText;
+      resetBoxBtn.style.background = 'linear-gradient(90deg, #7c2d12, #9a3412)';
+    }, 2000);
+  }
+
+  function addQRToCurrentBox(qrCode, status) {
+    currentBoxQRCodes.push({
+      code: qrCode,
+      status: status,
+      timestamp: new Date()
+    });
+    updateBoxInfo();
+  }
+
+  // FIXED: logToSheet function với mode: 'no-cors'
+  async function logToSheet(qr, status, shift, emp, po, wo, item, isDuplicate = false, partname = '', qtyPerBox = '', boxNumber = '', note = '') {
+    try {
+      const logData = {
+        timestamp: new Date().toISOString(),
+        qr: qr,
+        status: isDuplicate ? `TRÙNG - ${status}` : status,
+        shift: shift || '',
+        emp: emp || '',
+        po: po || '',
+        wo: wo || '',
+        item: item || '',
+        partname: partname || partnameInput.value || '',
+        qtyPerBox: qtyPerBox || qtyPerBoxInput.value || '',
+        boxNumber: boxNumber || boxNumberInput.value || '',
+        note: note || (isDuplicate ? 'QR code trùng - Auto-log from packing system' : 'Auto-log from packing system')
+      };
+
+      await fetch(LOG_GSHEET_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        mode: 'no-cors',
+        body: JSON.stringify(logData)
+      });
+
+      console.log('📤 Gửi log thành công với đầy đủ thông tin');
+    } catch (error) {
+      console.error('❌ Lỗi kết nối khi ghi log:', error);
+    }
+  }
+
+  // Rest of your original functions
+  function escapeHtml(s){
+    if(s == null) return '';
+    return String(s)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#039;');
+  }
+
+  function norm(s){ 
+    return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toUpperCase(); 
+  }
+  
+  function findStatusKey(obj){
+    const p = ['phán định','phandinh','kết quả','ketqua','result','status','kq'];
+    return Object.keys(obj).find(k => p.some(x => norm(k).includes(norm(x)))) || Object.keys(obj)[0] || null;
+  }
+  
+  function setOK(t){ 
+    resultPanel.className='result-panel result-ok'; 
+    resultText.textContent = t; 
+  }
+  
+  function setFail(t){ 
+    resultPanel.className='result-panel result-fail'; 
+    resultText.textContent = t; 
+  }
+  
+  function setWarn(t){ 
+    resultPanel.className='result-panel result-warn'; 
+    resultText.textContent = t; 
+  }
+
+  function setWait(t){ 
+  resultPanel.className='result-panel result-wait'; 
+  resultText.textContent = t; 
+  }
+
+  function setNotFound(t){ 
+    resultPanel.className='result-panel result-not-found'; 
+    resultText.textContent = t; 
+  }
+  
+  function setDuplicate(t){ 
+    resultPanel.className='result-panel result-duplicate'; 
+    resultText.textContent = t; 
+  }
+
+  function resetResultPanel() {
+    setWarn('CHƯA CÓ DỮ LIỆU');
+    emailStatus.textContent = '';
+  }
+
+  let qrBuffer = '', scanTimer = null;
+  
+  // UPDATED: Enhanced handleScan function with quantity limit
+  function handleScan(qr){
+    if(!qr || !validateForm()) return;
+    
+    const qrU = qr.toUpperCase();
+    
+    // KIỂM TRA NẾU ĐÃ ĐỦ SỐ LƯỢNG QR CODE OK
+    const matches = findQRInData(qrU, sheetRows);
+    let finalStatus = '';
+    
+    if(matches.length){
+        const last = matches[matches.length - 1];
+        const key = findStatusKey(last);
+        const val = norm(last[key] || '');
+        
+        if(/OK|PASS|GOOD/.test(val)){ 
+            // CHỈ CHO PHÉP THÊM NẾU CHƯA ĐỦ SỐ LƯỢNG
+            if (!canAddMoreQR()) {
+                setFail('ĐÃ ĐỦ SỐ LƯỢNG');
+                addLog(qr, `VƯỢT QUÁ SỐ LƯỢNG (Chỉ ${qtyPerBoxInput.value} QR/thùng)`);
+                
+                logToSheet(qr, 'VƯỢT QUÁ SỐ LƯỢNG', shiftSelect.value, empInput.value, poInput.value, 
+                          woInput.value, itemInput.value, false, partnameInput.value, 
+                          qtyPerBoxInput.value, boxNumberInput.value, 
+                          `Vượt quá số lượng cho phép (${qtyPerBoxInput.value} QR/thùng)`);
+                
+                setTimeout(() => {
+                    resetResultPanel();
+                }, 3000);
+                return;
+            }
+            
+            setOK('OK'); 
+            addLog(qr,'OK'); 
+            finalStatus = 'OK';
+            logToSheet(qr, 'OK', shiftSelect.value, empInput.value, poInput.value, 
+                      woInput.value, itemInput.value, false, partnameInput.value, 
+                      qtyPerBoxInput.value, boxNumberInput.value, 'QR code đạt chất lượng');
+        }
+        else if(/NG|FAIL/.test(val)){ 
+            setFail('QC FAIL'); 
+            addLog(qr,'QC FAIL'); 
+            finalStatus = 'QC FAIL';
+            sendEmailAlert(qr, last, 'FAIL');
+            logToSheet(qr, 'QC FAIL', shiftSelect.value, empInput.value, poInput.value, 
+                      woInput.value, itemInput.value, false, partnameInput.value, 
+                      qtyPerBoxInput.value, boxNumberInput.value, 'QR code không đạt chất lượng');
+        }
+        else { 
+            setWait('CHƯA QC');
+            addLog(qr,'CHƯA QC'); 
+            finalStatus = 'CHƯA QC';
+            sendEmailAlert(qr, last, 'CHƯA QC');
+            logToSheet(qr, 'CHƯA QC', shiftSelect.value, empInput.value, poInput.value, 
+                      woInput.value, itemInput.value, false, partnameInput.value, 
+                      qtyPerBoxInput.value, boxNumberInput.value, 'QR code chưa được QC');
+        }
+    } else {
+        setWait('CHƯA QC');
+        addLog(qr,'CHƯA QC'); 
+        finalStatus = 'CHƯA QC';
+        logToSheet(qr, 'CHƯA QC', shiftSelect.value, empInput.value, poInput.value, 
+                  woInput.value, itemInput.value, false, partnameInput.value, 
+                  qtyPerBoxInput.value, boxNumberInput.value, 'QR code chưa có trong hệ thống QC');
+        sendEmailAlert(qr, { 'Mã hàng': itemInput.value }, 'CHƯA QC');
+    }
+    
+    // CHỈ THÊM VÀO THÙNG NẾU LÀ QR FAIL HOẶC CHƯA QC, HOẶC OK NHƯNG CHƯA ĐỦ SỐ LƯỢNG
+    if (finalStatus !== 'OK' || canAddMoreQR()) {
+        addQRToCurrentBox(qrU, finalStatus);
+        
+        scannedQRs[qrU] = {
+            status: finalStatus,
+            timestamp: new Date(),
+            count: (scannedQRs[qrU]?.count || 0) + 1
+        };
+    }
+    
+    setTimeout(() => {
+        resetResultPanel();
+    }, 2000);
+  }
+
+  function getQRCurrentStatus(qr) {
+    const matches = findQRInData(qr, sheetRows);
+    
+    if (!matches.length) {
+        return 'CHƯA QC';
+    }
+    
+    const last = matches[matches.length - 1];
+    const key = findStatusKey(last);
+    const val = norm(last[key] || '');
+    
+    if (/OK|PASS|GOOD/.test(val)) {
+        return 'OK';
+    } else if (/NG|FAIL/.test(val)) {
+        return 'QC FAIL';
+    } else {
+        return 'CHƯA QC';
+    }
+  }
+
+  function convertExcelDate(excelDate, columnName = '') {
+    if (!excelDate) return '';
+
+    const colName = norm(columnName || '');
+    const strValue = String(excelDate);
+
+    if (strValue.includes('T')) {
+      try {
+        const date = new Date(strValue);
+        if (colName.includes('gio') || colName.includes('giờ') || colName.includes('time')) {
+          return date.toLocaleTimeString('vi-VN', { hour12: false });
+        } else if (colName.includes('ngay') || colName.includes('ngày') || colName.includes('date')) {
+          return date.toLocaleDateString('vi-VN');
+        } else {
+          return date.toLocaleString('vi-VN');
+        }
+      } catch (e) {
+        return strValue;
+      }
+    }
+
+    if (!isNaN(excelDate) && excelDate > 0) {
+      try {
+        const excelEpoch = new Date(1899, 11, 30);
+        const ms = (excelDate - 1) * 24 * 60 * 60 * 1000;
+        const date = new Date(excelEpoch.getTime() + ms);
+
+        if (colName.includes('gio') || colName.includes('giờ') || colName.includes('time')) {
+          return date.toLocaleTimeString('vi-VN', { hour12: false });
+        } else if (colName.includes('ngay') || colName.includes('ngày') || colName.includes('date')) {
+          return date.toLocaleDateString('vi-VN');
+        } else {
+          return date.toLocaleString('vi-VN');
+        }
+      } catch (e) {
+        return strValue;
+      }
+    }
+
+    return strValue;
+  }
+
+  function preprocessAllData(data) {
+    return data.map(row => {
+      const newRow = { ...row };
+
+      Object.keys(newRow).forEach(key => {
+        const value = newRow[key];
+        const keyNorm = norm(key);
+
+        if (keyNorm.includes('QR') || keyNorm.includes('CODE')) {
+          return;
+        }
+
+        if (
+          (keyNorm.includes('NGAY') || keyNorm.includes('NGÀY') ||
+           keyNorm.includes('DATE') || keyNorm.includes('GIỜ') ||
+           keyNorm.includes('GIO') || keyNorm.includes('TIME'))
+          && value
+        ) {
+          newRow[key] = convertExcelDate(value, key);
+        }
+      });
+
+      return newRow;
+    });
+  }
+
+  function addLog(qr, res, isDuplicate = false){
+    const li = document.createElement('li');
+    let logText = `${new Date().toLocaleTimeString()} - ${qr} (${res})`;
+    
+    if (isDuplicate) {
+      logText += ' 🔄 TRÙNG';
+    }
+    
+    li.textContent = logText;
+    
+    if (res === 'OK') {
+      li.style.color = 'green';
+    } else if (res === 'QC FAIL') {
+      li.style.color = '#ef4444';
+    } else if (res === 'CHƯA QC') {
+      li.style.color = '#facc15';
+    } else if (res === 'TRÙNG QR CODE') {
+      li.style.color = '#8b5cf6';
+    } else {
+      li.style.color = '#94a3b8';
+    }
+    
+    scanLogList.prepend(li);
+    if (scanLogList.children.length > 200) scanLogList.removeChild(scanLogList.lastChild);
+  }
+
+  function sendEmailAlert(qr, row, status) {
+    if(!window.emailjs || !EMAILJS_USER_ID || EMAILJS_USER_ID === "YOUR_EMAILJS_PUBLIC_KEY"){
+      console.warn('EmailJS not configured. Skipping sendEmailAlert.');
+      return;
+    }
+    
+    const now = Date.now();
+    const emailKey = `${qr}_${status}`;
+    
+    if(lastMailSent[emailKey] && (now - lastMailSent[emailKey] < 5*60*1000)) {
+      console.log(`📧 Email already sent for ${qr} (${status}) within 5 minutes`);
+      return;
+    }
+    
+    lastMailSent[emailKey] = now;
+    
+    let subject, statusText;
+    
+    if (status === 'FAIL') {
+      subject = `⚠️ QC FAIL - ${qr}`;
+      statusText = 'FAIL';
+    } else if (status === 'CHƯA QC') {
+      subject = `🟡 CHƯA QC - ${qr}`;
+      statusText = 'CHƯA QC';
+    } else {
+      subject = `ℹ️ Thông báo QC - ${qr}`;
+      statusText = status;
+    }
+    
+    const params = {
+      to_email: ALERT_EMAIL,
+      subject: subject,
+      qr_code: qr,
+      item_code: row['Mã hàng'] || row['maHang'] || row['item'] || itemInput.value || '',
+      status_text: statusText,
+      time: new Date().toLocaleString('vi-VN')
+    };
+    
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params)
+      .then(() => {
+        console.log(`📧 Email sent for ${qr} (${status})`);
+        emailStatus.textContent = `📧 Đã gửi email thông báo`;
+        emailStatus.style.color = '#10b981';
+      })
+      .catch(err => {
+        console.error('EmailJS error', err);
+        emailStatus.textContent = `❌ Lỗi gửi email`;
+        emailStatus.style.color = '#ef4444';
+      });
+  }
+
+  function findQRInData(qr, data) {
+    const qrU = qr.toUpperCase().trim();
+    console.log('🔍 Tìm QR:', qrU);
+    
+    const matches = data.filter(row => {
+      const qrColumns = ['qr', 'qrcode', 'mãqr', 'maqr', 'code'];
+      for (const key of Object.keys(row)) {
+        const keyNorm = norm(key);
+        if (qrColumns.some(qrCol => keyNorm.includes(qrCol))) {
+          const value = String(row[key] || '').toUpperCase();
+          if (value === qrU || value.includes(qrU)) {
+            console.log('✅ Tìm thấy QR trong cột QR:', key, value);
+            return true;
+          }
+        }
+      }
+      
+      for (const value of Object.values(row)) {
+        const strValue = String(value || '').toUpperCase();
+        if (strValue === qrU) {
+          console.log('✅ Tìm thấy QR chính xác:', strValue);
+          return true;
+        }
+      }
+      
+      return false;
+    });
+    
+    console.log('📊 Số kết quả tìm thấy:', matches.length);
+    return matches;
+  }
+
+  async function loadSheet(){
+    try{
+      console.log('🔄 Đang tải dữ liệu từ Google Sheet...');
+      const res = await fetch(GSHEET_URL + '?_=' + Date.now());
+      const raw = await res.json();
+      
+      let arr = [];
+      if(Array.isArray(raw)) arr = raw;
+      else if(Array.isArray(raw.data)) arr = raw.data;
+      else if(Array.isArray(raw.rows)) arr = raw.rows;
+      else if(Array.isArray(raw.values)) arr = raw.values;
+      else if(Array.isArray(raw.content)) arr = raw.content;
+      else if(raw && typeof raw === 'object'){
+        const k = Object.keys(raw).find(x => Array.isArray(raw[x]));
+        if(k) arr = raw[k];
+      }
+
+      let newRows = [];
+      if(Array.isArray(arr[0]) && Array.isArray(arr[1])){
+        const headers = arr[0];
+        const rows = arr.slice(1);
+        newRows = rows.map(r => {
+          const o = {};
+          headers.forEach((h,i) => o[h] = r[i] || '');
+          return o;
+        });
+      } else if(typeof arr[0] === 'object'){
+        newRows = arr;
+      }
+
+      newRows = preprocessAllData(newRows);
+
+      const newHash = JSON.stringify(newRows);
+      if(newHash !== lastHash){
+        sheetRows = newRows;
+        lastHash = newHash;
+        renderTable();
+        console.log('✅ Dữ liệu đã tải xong - rows:', sheetRows.length);
+        
+        dataLoaded = true;
+        validateForm();
+      }
+      lastUpdate.textContent = new Date().toLocaleTimeString();
+      rowCount.textContent = `Tổng số dòng: ${newRows.length.toLocaleString()} | Nguồn: Google Sheet`;
+    }catch(err){
+      console.error('❌ Lỗi tải dữ liệu:', err);
+      lastUpdate.textContent = 'Lỗi tải dữ liệu';
+    }
+  }
+
+  function renderTable(){
+    if (sheetRows.length === 0) {
+      console.log('📊 Không có dữ liệu để hiển thị');
+      return;
+    }
+    
+    keys = Object.keys(sheetRows[0]);
+    sheetHead.innerHTML = '<tr>' + keys.map(k => `<th>${escapeHtml(k)}</th>`).join('') + '</tr>';
+    filteredRows = sheetRows.slice();
+    
+    countOK = 0; countFAIL = 0; countWAIT = 0;
+    
+    sheetRows.forEach((r, index) => {
+      const k = findStatusKey(r);
+      const v = norm(r[k] || '');
+      
+      if(/OK|PASS|GOOD/.test(v)) {
+        countOK++;
+      }
+      else if(/NG|FAIL/.test(v)) {
+        countFAIL++;
+      }
+      else {
+        countWAIT++;
+      }
+    });
+    
+    sumOk.textContent = 'OK:' + countOK;
+    sumFail.textContent = 'FAIL:' + countFAIL;
+    sumWait.textContent = 'Chưa QC:' + countWAIT;
+    
+    renderAllRows();
+  }
+
+  function renderAllRows(){
+    if(filteredRows.length === 0) return;
+
+    sheetBody.innerHTML = filteredRows.map(r => {
+      const statusKey = findStatusKey(r);
+      const statusValue = norm(r[statusKey] || '');
+
+      let statusClass = '';
+      if(/OK|PASS|GOOD/.test(statusValue)) statusClass = 'status-ok';
+      else if(/NG|FAIL/.test(statusValue)) statusClass = 'status-fail';
+      else statusClass = 'status-wait';
+
+      return '<tr>' + keys.map(k => {
+        let value = r[k] || '';
+
+        const kNorm = norm(k);
+        if (kNorm === 'GIO' || kNorm.includes('GIỜ') || kNorm.includes('GIO') || kNorm.includes('TIME')) {
+          const match = String(value).match(/(\d{1,2}:\d{2}(:\d{2})?)/);
+          value = match ? match[0] : value;
+        } else if (kNorm === 'NGAY' || kNorm.includes('NGÀY') || kNorm.includes('NGAY') || kNorm.includes('DATE')) {
+          const match = String(value).match(/(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/);
+          value = match ? match[0] : value;
+        }
+
+        const escapedValue = escapeHtml(value);
+        return `<td class="${k === statusKey ? statusClass : ''}">${escapedValue}</td>`;
+      }).join('') + '</tr>';
+    }).join('');
+  }
+
+  searchQr.addEventListener('input', () => {
+    const q = (searchQr.value || '').trim().toUpperCase();
+    if (q.length === 0) {
+      filteredRows = sheetRows.slice();
+    } else {
+      filteredRows = sheetRows.filter(r => 
+        Object.values(r).some(v => 
+          String(v || '').toUpperCase().includes(q)
+        )
+      );
+    }
+    renderAllRows();
+  });
+
+  // UPDATED: Add event listeners for ALL required fields
+  [shiftSelect, empInput, poInput, woInput, itemInput, partnameInput, qtyPerBoxInput, boxNumberInput].forEach(input => {
+    input.addEventListener('change', validateForm);
+    input.addEventListener('input', validateForm);
+  });
+
+  if(window.emailjs && EMAILJS_USER_ID && EMAILJS_USER_ID !== "YOUR_EMAILJS_PUBLIC_KEY"){
+    emailjs.init(EMAILJS_USER_ID);
+  }
+
+  scanInput.addEventListener('input', e => {
+    if (!validateForm()) return;
+    
+    e.target.value = e.target.value.toUpperCase();
+    
+    const v = e.target.value;
+    if (!v) return;
+    qrBuffer = v.replace(/\r|\n/g, '').trim();
+    clearTimeout(scanTimer);
+    scanTimer = setTimeout(() => {
+      if (qrBuffer.length > 2) {
+        handleScan(qrBuffer);
+        e.target.value = '';
+        qrBuffer = '';
+      }
+    }, 120);
+  });
+
+  scanInput.addEventListener('paste', e => {
+    const pastedText = e.clipboardData.getData('text');
+    e.preventDefault();
+    
+    const startPos = e.target.selectionStart;
+    const endPos = e.target.selectionEnd;
+    const currentValue = e.target.value;
+    
+    e.target.value = currentValue.substring(0, startPos) + 
+                     pastedText.toUpperCase() + 
+                     currentValue.substring(endPos);
+    
+    const inputEvent = new Event('input', { bubbles: true });
+    e.target.dispatchEvent(inputEvent);
+  });
+
+  // Start Application
+  initLogin();
+  initBoxManagement();
+
+  window._PACKING = { 
+    loadSheet, 
+    renderAllRows, 
+    sheetRows, 
+    logToSheet, 
+    scannedQRs,
+    currentBoxQRCodes,
+    addQRToCurrentBox,
+    resetCurrentBox,
+    validateForm // Export for testing
+  };
+ 
+})();
+</script>
+</body>
+</html>

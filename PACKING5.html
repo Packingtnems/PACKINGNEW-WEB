@@ -1372,6 +1372,30 @@ function createQRItemHTML(qr, number, qrImage) {
     
     const qrU = qr.toUpperCase();
     
+    // 🔴 KIỂM TRA TRÙNG TẤT CẢ QR CODE
+    if (scannedQRs[qrU]) {
+        const previousStatus = scannedQRs[qrU].status;
+        setDuplicate('TRÙNG QR CODE');
+        addLog(qrU, 'TRÙNG', true);
+        
+        logToSheet(qrU, `TRÙNG - ${previousStatus}`, shiftSelect.value, empInput.value, poInput.value, 
+                  woInput.value, itemInput.value, true, partnameInput.value, 
+                  qtyPerBoxInput.value, boxNumberInput.value, 
+                  `QR code đã quét trước đó - Trạng thái: ${previousStatus}`);
+        
+        // Hiển thị thời gian quét trước đó
+        const prevTime = new Date(scannedQRs[qrU].timestamp).toLocaleTimeString();
+        emailStatus.textContent = `⏰ Đã quét lúc: ${prevTime} (${previousStatus})`;
+        emailStatus.style.color = '#8b5cf6';
+        
+        setTimeout(() => {
+            resetResultPanel();
+        }, 4000);
+        
+        scanInput.value = ''; // Xóa input
+        return; // Dừng xử lý, không cho thêm vào thùng
+    }
+    
     // KIỂM TRA NẾU ĐÃ ĐỦ SỐ LƯỢNG QR CODE OK
     const matches = findQRInData(qrU, sheetRows);
     let finalStatus = '';
@@ -1434,20 +1458,34 @@ function createQRItemHTML(qr, number, qrImage) {
     }
     
     // CHỈ THÊM VÀO THÙNG NẾU LÀ QR FAIL HOẶC CHƯA QC, HOẶC OK NHƯNG CHƯA ĐỦ SỐ LƯỢNG
-    if (finalStatus !== 'OK' || canAddMoreQR()) {
+   // CHỈ CHO THÊM VÀO THÙNG NẾU LÀ QR OK
+if (finalStatus === 'OK') {
+
+    // CHỈ THÊM KHI CHƯA ĐỦ SỐ LƯỢNG
+    if (canAddMoreQR()) {
+
         addQRToCurrentBox(qrU, finalStatus);
-        
+
         scannedQRs[qrU] = {
             status: finalStatus,
             timestamp: new Date(),
             count: (scannedQRs[qrU]?.count || 0) + 1
         };
+
+    } else {
+        // ĐÃ ĐỦ SỐ LƯỢNG
+        setFail('ĐÃ ĐỦ SỐ LƯỢNG');
     }
-    
+
+} else {
+    // KHÔNG OK → KHÔNG ĐƯA VÀO THÙNG
+    console.log('❌ QR FAIL hoặc CHƯA QC → không thêm vào thùng');
+}
+
     setTimeout(() => {
         resetResultPanel();
     }, 2000);
-  }
+}
 
   function getQRCurrentStatus(qr) {
     const matches = findQRInData(qr, sheetRows);

@@ -625,7 +625,29 @@ th, td {
     '6333': '633311',
     '5456': '545611'
   };
-
+  // CẤU HÌNH ĐỘ DÀI QR CODE THEO TỪNG MÃ HÀNG
+// CẤU HÌNH ĐỘ DÀI QR CODE THEO TỪNG MÃ HÀNG
+  const ITEM_QR_LENGTHS = {
+    "ECM-2583-236": 15,
+    "ECM-2583-164": 15,
+    "ECM-2300": 15,       // Nếu mã này có thể là 12 hoặc 15 ký tự, hãy sửa thành: [12, 15]
+    "ECM-2310": 15,
+    "IZ-1-R3": 15,
+    "RM-4K-R3": 15,
+    "AM-4-R3": 15,
+    "P-7937": 15,
+    "P-8105": 15,
+    "P-8149": 15,
+    "BMS 85AH": [21, 23],
+    "BMS 57AH": [21, 23],
+    "CONTROLLER": [21, 23],
+    "CAS NEMO": 15,
+    "CAS MINI-DI": 15,
+    "CAS MINI-485": 15,
+    "BN 2573A": 15,
+    "OEM": 15,
+    "CABLESEAL P3": 15
+  };
   // DOM Elements
   const loginModal = document.getElementById('loginModal');
   const mainApp = document.getElementById('mainApp');
@@ -1377,10 +1399,29 @@ function createQRItemHTML(qr, number, qrImage) {
     if(!qr || !validateForm()) return;
     
     const qrU = qr.toUpperCase();
-    
+    const currentItem = itemInput.value.trim().toUpperCase();
+
+    // KIỂM TRA ĐỘ DÀI QR CODE THEO MÃ HÀNG
+    const expectedLengths = ITEM_QR_LENGTHS[currentItem];
+    if (expectedLengths) {
+        const isValidLength = Array.isArray(expectedLengths)
+            ? expectedLengths.includes(qrU.length)
+            : expectedLengths === qrU.length;
+
+        if (!isValidLength) {
+            let lengthMsg = Array.isArray(expectedLengths) ? expectedLengths.join(' hoặc ') : expectedLengths;
+            setFail(`SAI ĐỘ DÀI QR`);
+            document.getElementById('emailStatus').textContent = `Mã quét: ${qrU.length} ký tự. Yêu cầu: ${lengthMsg} ký tự.`;
+            document.getElementById('emailStatus').style.color = '#ef4444';
+            addLog(qrU, `❌ LỖI ĐỘ DÀI (${qrU.length} kí tự)`);
+            setTimeout(() => { resetResultPanel(); }, 3000);
+            scanInput.value = '';
+            return;
+        }
+    }
+
     // 🔴 KIỂM TRA TRÙNG TẤT CẢ QR CODE
     // 🔴 KIỂM TRA TRÙNG THEO CẶP: QR CODE + MÃ HÀNG
-    const currentItem = itemInput.value.trim().toUpperCase();
     const combinedKey = qrU + "|" + currentItem;
 
     if (scannedQRs[combinedKey]) {
